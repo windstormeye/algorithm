@@ -9,6 +9,10 @@ public class Main {
 //        c1ex1_1_5.c1ex1_1_5();
 //        c1ex1_1_6.c1ex1_1_6();
 //        c1ex1_1_7.c1_ex1_1_7();
-            c1ex1_1_9.c1ex1_1_9();
+//            c1ex1_1_9.c1ex1_1_9();
+
+        boolean[][] a = { { true, false, true }, { false, true, false },
+                { true, true, false, true, false, true }, {true} };
+        c1ex1_1_11.c1ex1_1_11(a);
     }
 }
