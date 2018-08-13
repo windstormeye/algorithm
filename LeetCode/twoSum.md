@@ -47,3 +47,65 @@ class Solution {
 没办法，死磕也不是个办法，这出门不顺一下子就遇到了坎，看了solution，原来就是把contains换成了两个for，修改成了Swift版本后，这尼玛就AC了。
 
 我是没搞懂为啥，只能日后再探了或者希望有识之士能给我提个醒🙏。
+
+====== 2018-8-13 更新 ======
+哈哈，最近又开始做 LeetCode 主要是想用剩下的时间给明年春招的优势更大一些（我是真的不想秋招），所以又开始二刷 2Sum 哈哈。不过第二次再去思考这道题的时候又给了我很多不一样的思考，直接看代码吧。
+
+```Swift
+func twoSum(_ nums: [Int], _ target: Int) -> [Int] {
+        var index = 0
+        var final:[Int] = [0 ,0]
+        for num in nums {
+            let tempNum = target - num
+            let tempNums = nums[index+1..<nums.count]
+            
+            // contains 为一次遍历
+            if tempNums.contains(tempNum) {
+                // 这里的 index 多了一次遍历
+                let tempIndex:Int = tempNums.index(of: tempNum)!
+                final = [index, tempIndex]
+           }
+            index += 1
+        }
+    return final
+}
+```
+
+这是第一遍提交的超时代码，给我报超时了以后其实我就知道个差不多了，首先有个 for 已经是 O(n) 了，用到了 `num[index+1..<nums.count]` 这已经是 O(n^2) 了，然后还有个 `contains` 这就 O(n^3) 了，后边还有个 `index` ，emmm，确实该超时了。
+
+接下来又优化了一下，代码如下：
+
+```Swift
+var index = 0
+var final:[Int] = [0 ,0]
+for num in nums {
+    var n_index = index + 1
+    for n in nums[n_index..<nums.count] {
+        if n + num == target {
+            final = [index, n_index]
+        }
+        n_index += 1
+    }
+    index += 1
+}
+return final
+```
+
+提交后还是超时，后边想了一下，时间复杂度还是 O(n^2) ，因为 `nums[n_index..<nums.count]` 还在。此时我没法了，看了之前写的代码，用的是 for(index) 套了 for(index - 1) ，这样复杂度是 O(logn)。随后在网上又看到了一个解法利用上了 Dictionary ，直接就是 O(n)，我自己认为应该是最优解了哈哈，代码如下：
+
+```Swift
+func twoSum(_ nums: [Int], _ target: Int) -> [Int] {
+    var final = [Int]()
+    var dict = [Int: Int]()
+    for index in 0..<nums.count {
+        guard let lastIndex = dict[target - nums[index]] else {
+            dict[nums[index]] = index
+            continue
+        }
+        final.append(index)
+        final.append(lastIndex)
+    }
+    return final
+}
+```
+
